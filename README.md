@@ -1,21 +1,70 @@
-# ActionBarSaver - Gestion des Profils
+<p align="center"><img src="https://via.placeholder.com/150" alt="project-logo"></p>
 
-Cet addon pour World of Warcraft 3.3.5 permet de sauvegarder, restaurer, et gérer les configurations de vos barres d'action.
+<h1 align="center">Mon Addon pour WoW</h1>
 
-## Installation
+#### <p align="center">Un addon puissant pour gérer vos actions et raccourcis dans World of Warcraft</p>
 
-1. Téléchargez l'addon depuis GitHub.
-2. Placez le dossier dans `Interface/AddOns`.
-3. Activez l'addon dans le gestionnaire d'addons.
+<p align="center">
+    <a href="https://github.com/votre-utilisateur/votre-projet/releases">
+        <img src="https://img.shields.io/github/downloads/votre-utilisateur/votre-projet/total?style=for-the-badge" alt="GitHub downloads">
+    </a>
+    <a href="https://discord.gg/votre-serveur">
+        <img src="https://img.shields.io/discord/123456789012345678?style=for-the-badge" alt="Discord">
+    </a>
+    <a href="https://github.com/votre-utilisateur/votre-projet">
+        <img src="https://img.shields.io/github/stars/votre-utilisateur/votre-projet?style=for-the-badge" alt="GitHub stars">
+    </a>
+</p>
 
-## Utilisation
+---
 
-Utilisez les commandes suivantes en jeu :
+### **<ins>Vidéo tutoriel :</ins>**
 
-```bash
-/absui                                 # Afficher le menu ABS
-/abs save <nom du profil>              # Sauvegarde vos barres d'actions sous le nom donné.
-/abs restore <nom du profil>           # Restaure vos barres d'actions depuis le profil donné.
-/abs delete <nom du profil>            # Supprime le profil indiqué.
-/abs rename <ancien nom> <nouveau nom> # Renomme un profil existant.
-/abs list                              # Affiche la liste de tous les profils sauvegardés.
+<p align="center">
+    <a href="https://www.youtube.com/watch?v=K2T6kDj1OKs"><img src="https://img.youtube.com/vi/K2T6kDj1OKs/0.jpg" alt="tutoriel-video"></a>
+</p>
+
+<p align="center">
+    <a href="https://www.youtube.com/watch?v=K2T6kDj1OKs" target="_blank">Cliquez ici pour regarder la vidéo tutoriel sur YouTube</a>
+</p>
+
+---
+
+### **<ins>Fonctionnalités :</ins>**
+
+- ✅ Gestion complète des raccourcis clavier.
+- 📦 Sauvegarde et restauration des barres d'actions.
+- 🔄 Rafraîchissement rapide des profils.
+- ⚙️ Interface intuitive et facile à utiliser.
+
+---
+
+### **<ins>Screenshots :</ins>**
+
+<p align="center"><img src="images/screenshot1.png" alt="screenshot1"></p>
+<p align="center">*Capture d'écran de la gestion des profils*</p>
+
+<p align="center"><img src="images/screenshot2.png" alt="screenshot2"></p>
+<p align="center">*Capture d'écran de l'interface utilisateur*</p>
+
+---
+
+### **<ins>Téléchargement :</ins>**
+
+Téléchargez l'addon à partir de la section [Releases GitHub](https://github.com/votre-utilisateur/votre-projet/releases).
+
+---
+
+### **<ins>Contact et support :</ins>**
+
+Si vous avez des questions ou souhaitez obtenir du support, rejoignez notre serveur Discord :
+
+<p align="center">
+    <a href="https://discord.gg/votre-serveur">
+        <img src="https://discordapp.com/api/guilds/123456789012345678/embed.png?style=banner2" alt="Discord">
+    </a>
+</p>
+
+---
+
+<p align="center">README réalisé par [@VotrePseudo](https://github.com/votre-utilisateur)</p>
