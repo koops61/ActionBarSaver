@@ -19,9 +19,3 @@ Utilisez les commandes suivantes en jeu :
 /abs delete <nom du profil>            # Supprime le profil indiqué.
 /abs rename <ancien nom> <nouveau nom> # Renomme un profil existant.
 /abs list                              # Affiche la liste de tous les profils sauvegardés.
-
-## Tutoriel vidéo
-
-[![Regarder le tutoriel](https://img.youtube.com/vi/K2T6kDj1OKs/maxresdefault.jpg)](https://www.youtube.com/watch?v=K2T6kDj1OKs)
-
-Cliquez sur l'image ci-dessus pour regarder la vidéo.
