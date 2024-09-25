@@ -43,10 +43,10 @@
 
 ### **<ins>Screenshots :</ins>**
 
-<p align="center"><img src="images/screenshot1.png" alt="screenshot1"></p>
+<p align="center"><img src="https://dev.designer-kanis.com/image/UI-profils.png" alt="screenshot1"></p>
 <p align="center">*Capture d'écran de la gestion des profils*</p>
 
-<p align="center"><img src="images/screenshot2.png" alt="screenshot2"></p>
+<p align="center"><img src="https://dev.designer-kanis.com/image/UI.png" alt="screenshot2"></p>
 <p align="center">*Capture d'écran de l'interface utilisateur*</p>
 
 ---
