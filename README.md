@@ -23,12 +23,13 @@
 ### **<ins>Vidéo tutoriel :</ins>**
 
 <p align="center">
-    <a href="https://www.youtube.com/watch?v=K2T6kDj1OKs"><img src="https://img.youtube.com/vi/K2T6kDj1OKs/0.jpg" alt="tutoriel-video"></a>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/K2T6kDj1OKs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
 <p align="center">
     <a href="https://www.youtube.com/watch?v=K2T6kDj1OKs" target="_blank">Cliquez ici pour regarder la vidéo tutoriel sur YouTube</a>
 </p>
+
 
 ---
 
