@@ -7,14 +7,14 @@
 #### <p align="center">Un addon puissant pour gérer vos actions et raccourcis dans World of Warcraft</p>
 
 <p align="center">
-    <a href="https://github.com/votre-utilisateur/votre-projet/releases">
-        <img src="https://img.shields.io/github/downloads/votre-utilisateur/votre-projet/total?style=for-the-badge" alt="GitHub downloads">
+    <a href="https://github.com/koops61/ActionBarSaver/releases">
+        <img src="https://img.shields.io/github/downloads/koops61/ActionBarSaver/total?style=for-the-badge" alt="GitHub downloads">
     </a>
     <a href="https://discord.gg/votre-serveur">
         <img src="https://img.shields.io/discord/123456789012345678?style=for-the-badge" alt="Discord">
     </a>
     <a href="https://github.com/koops61/ActionBarSaver/">
-        <img src="https://img.shields.io/github/stars/votre-utilisateur/votre-projet?style=for-the-badge" alt="GitHub stars">
+        <img src="https://img.shields.io/github/stars/koops61/ActionBarSaver?style=for-the-badge" alt="GitHub stars">
     </a>
 </p>
 
