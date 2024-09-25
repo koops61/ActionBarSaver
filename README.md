@@ -1,4 +1,6 @@
-<p align="center"><img src="https://dev.designer-kanis.com/image/abs3.webp" alt="icon-launcher"></p>
+<p align="center">
+  <img src="https://dev.designer-kanis.com/image/abs3.webp" alt="icon-launcher" width="150">
+</p>
 
 <h1 align="center">Mon Addon pour WoW</h1>
 
