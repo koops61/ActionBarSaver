@@ -1,4 +1,4 @@
-<p align="center"><img src="[https://via.placeholder.com/150](https://dev.designer-kanis.com/image/abs3.webp)" alt="project-logo"></p>
+<p align="center"><img src="[[https://via.placeholder.com/150](https://dev.designer-kanis.com/image/abs3.webp)]" alt="project-logo"></p>
 
 <h1 align="center">Mon Addon pour WoW</h1>
 
