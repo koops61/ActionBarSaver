@@ -11,7 +11,7 @@
         <img src="https://img.shields.io/github/downloads/koops61/ActionBarSaver/total?style=for-the-badge" alt="GitHub downloads">
     </a>
     <a href="https://discord.gg/T7hXn7vf">
-        <img src="https://img.shields.io/discord/123456789012345678?style=for-the-badge" alt="Discord">
+        <img src="https://img.shields.io/discord/1288655070031904830?style=for-the-badge" alt="Discord">
     </a>
     <a href="https://github.com/koops61/ActionBarSaver/">
         <img src="https://img.shields.io/github/stars/koops61/ActionBarSaver?style=for-the-badge" alt="GitHub stars">
