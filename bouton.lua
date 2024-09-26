@@ -6,7 +6,7 @@ minimapButton:SetPoint("TOPLEFT", Minimap, "TOPLEFT") -- Position initiale
 
 -- Ajouter une texture à l'icône du bouton
 minimapButton.icon = minimapButton:CreateTexture(nil, "BACKGROUND")
-minimapButton.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") -- Chemin vers l'icône
+minimapButton.icon:SetTexture("Interface\\Icons\\abs3.png") -- Chemin vers l'icône
 minimapButton.icon:SetSize(20, 20)
 minimapButton.icon:SetPoint("CENTER")
 
@@ -28,8 +28,8 @@ minimapButton:SetScript("OnMouseDown", function(self, button)
             end
         end
     elseif button == "RightButton" then
-        -- Clic droit pour les options ou autre
-        print("Clic droit : Options")
+        -- Clic droit pour vérifier les mises à jour manuellement
+        checkForUpdate()
     end
 end)
 
@@ -38,7 +38,7 @@ minimapButton:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
     GameTooltip:SetText("ActionBarSaver")
     GameTooltip:AddLine("Clic gauche pour ouvrir l'interface")
-    GameTooltip:AddLine("Clic droit pour les options")
+    GameTooltip:AddLine("Clic droit pour vérifier les mises à jour")
     GameTooltip:Show()
 end)
 
@@ -55,3 +55,41 @@ end
 
 -- Appel de la fonction de mise à jour pour initialiser la position
 UpdateMinimapButtonPosition()
+
+-- Interface utilisateur pour afficher la version actuelle et le bouton CheckUpdate
+local function CreateUpdateFrame()
+    local frame = CreateFrame("Frame", "ABSUpdateFrame", UIParent, "BasicFrameTemplateWithInset")
+    frame:SetSize(200, 100)
+    frame:SetPoint("CENTER", UIParent, "CENTER")
+
+    frame.title = frame:CreateFontString(nil, "OVERLAY")
+    frame.title:SetFontObject("GameFontHighlight")
+    frame.title:SetPoint("LEFT", frame.TitleBg, "LEFT", 5, 0)
+    frame.title:SetText("ActionBarSaver")
+
+    -- Texte pour afficher la version actuelle
+    frame.versionText = frame:CreateFontString(nil, "OVERLAY")
+    frame.versionText:SetFontObject("GameFontHighlight")
+    frame.versionText:SetPoint("TOPLEFT", 10, -30)
+    frame.versionText:SetText("Version actuelle: " .. currentVersion)
+
+    -- Bouton CheckUpdate
+    local checkButton = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
+    checkButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
+    checkButton:SetSize(100, 30)
+    checkButton:SetText("CheckUpdate")
+    checkButton:SetNormalFontObject("GameFontNormalLarge")
+    checkButton:SetHighlightFontObject("GameFontHighlightLarge")
+
+    -- Action du bouton
+    checkButton:SetScript("OnClick", function()
+        checkForUpdate()
+    end)
+
+    frame:Hide() -- Par défaut, l'interface est cachée
+
+    return frame
+end
+
+-- Créer le cadre d'UI pour les mises à jour au lancement
+ABSUIFrame = CreateUpdateFrame()
