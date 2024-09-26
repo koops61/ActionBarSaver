@@ -1,11 +1,11 @@
 ## Interface: 30300
 ## Title: Action Bar Saver 3
 ## Notes: Saves and restores your action bars
-## Author: Shadowed
+## Author: Shadowed & koops61
 ## SavedVariables: ActionBarSaverDB
 ## LoadManagers: AddonLoader
-## X-LoadOn-Slash: /actionbarsaver, /abs
+## X-LoadOn-Slash: /actionbarsaver, /abs, /absui
 
 localization.enUS.lua
-
+UpdateChecker.lua
 ActionBarSaver.lua
