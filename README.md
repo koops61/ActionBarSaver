@@ -10,7 +10,7 @@
     <a href="https://github.com/koops61/ActionBarSaver/releases">
         <img src="https://img.shields.io/github/downloads/koops61/ActionBarSaver/total?style=for-the-badge" alt="GitHub downloads">
     </a>
-    <a href="https://discord.gg/votre-serveur">
+    <a href="https://discord.gg/T7hXn7vf">
         <img src="https://img.shields.io/discord/123456789012345678?style=for-the-badge" alt="Discord">
     </a>
     <a href="https://github.com/koops61/ActionBarSaver/">
