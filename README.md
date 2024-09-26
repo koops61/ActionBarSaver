@@ -55,7 +55,7 @@
 
 ### **<ins>Téléchargement :</ins>**
 
-Téléchargez l'addon à partir de la section [Releases GitHub](https://github.com/votre-utilisateur/votre-projet/releases).
+Téléchargez l'addon à partir de la section [Releases GitHub](https://github.com/koops61/ActionBarSaver/releases).
 
 ---
 
@@ -64,11 +64,11 @@ Téléchargez l'addon à partir de la section [Releases GitHub](https://github.c
 Si vous avez des questions ou souhaitez obtenir du support, rejoignez notre serveur Discord :
 
 <p align="center">
-    <a href="https://discord.gg/votre-serveur">
-        <img src="https://discordapp.com/api/guilds/123456789012345678/embed.png?style=banner2" alt="Discord">
+    <a href="https://discord.gg/T7hXn7vf">
+        <img src="https://discordapp.com/api/guilds/1288655070031904830/embed.png?style=banner2" alt="Discord">
     </a>
 </p>
 
 ---
 
-<p align="center">README réalisé par [@VotrePseudo](https://github.com/votre-utilisateur)</p>
+<p align="center">README réalisé par [@koops61](https://github.com/koops61)</p>
