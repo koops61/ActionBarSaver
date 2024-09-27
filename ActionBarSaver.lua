@@ -1,5 +1,5 @@
 --[[ 
-	Action Bar Saver, Shadowed & Koops61
+	Action Bar Saver, Shadowed
 ]]
 ActionBarSaver = select(2, ...)
 
