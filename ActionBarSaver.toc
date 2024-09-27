@@ -8,4 +8,6 @@
 
 localization.enUS.lua
 UpdateChecker.lua
+bouton.lua
 ActionBarSaver.lua
+UpdateChecker.lua
