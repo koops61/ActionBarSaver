@@ -1,4 +1,53 @@
-select(2, ...).locals = {
+local ABS = select(2, ...)
+
+ABS.locals = setmetatable({
+	-- UI Strings
+	["UI_TITLE"] = "ActionBarSaver - Profile Management",
+	["SELECT_PROFILE"] = "Select Profile",
+	["SAVE"] = "Save",
+	["RESTORE"] = "Restore",
+	["DELETE"] = "Delete",
+	["RENAME"] = "Rename",
+	["REFRESH"] = "Refresh",
+	["EXPORT"] = "Export",
+	["IMPORT"] = "Import",
+	["EXPORT_TITLE"] = "ActionBarSaver - Export Profile",
+	["IMPORT_TITLE"] = "ActionBarSaver - Import Profile",
+	["EXPORT_DESC"] = "Press Ctrl+C to copy the profile data string:",
+	["IMPORT_DESC"] = "Paste profile string here (Ctrl+V) and click Import:",
+	["IMPORT_CONFIRM"] = "Import Profile",
+	["CLOSE"] = "Close",
+	["IMPORT_SUCCESS"] = "Profile \"%s\" (%s) imported successfully!",
+	["IMPORT_ERR_INVALID"] = "Invalid or corrupted import string.",
+	["RESTORE_MACROS"] = "Restore macros",
+	["RESTORE_BINDS"] = "Save & restore keybinds",
+	["RESTORE_RANK"] = "Restore highest spell rank",
+	["DUAL_SPEC_ENABLE"] = "Auto-switch on spec change",
+	["DUAL_SPEC_TITLE"] = "Dual Spec Auto-Switch",
+	["DUAL_SPEC_PRIMARY"] = "Primary Spec:",
+	["DUAL_SPEC_SECONDARY"] = "Secondary Spec:",
+	["PROFILE_NAME"] = "Profile Name",
+	["NO_PROFILES"] = "No profiles found",
+	["NONE"] = "None",
+	["CURRENT_CLASS_ONLY"] = "Current class only",
+	["ALL_CLASSES"] = "All classes",
+	["PROFILES_REFRESHED"] = "Profile list refreshed.",
+	["ENTER_PROFILE_NAME"] = "Please enter a profile name.",
+	["SELECT_PROFILE_FIRST"] = "Please select a profile first.",
+	["PROFILE_SAVED"] = "Profile \"%s\" saved.",
+	["PROFILE_RESTORED"] = "Profile \"%s\" restored.",
+	["PROFILE_DELETED"] = "Profile \"%s\" deleted.",
+	["PROFILE_RENAMED"] = "Profile \"%s\" renamed to \"%s\".",
+	["BINDS_SAVED"] = "Keybindings saved for profile: %s",
+	["BINDS_RESTORED"] = "Keybindings restored for profile: %s",
+	["NO_BINDS_FOUND"] = "No keybindings found for profile: %s",
+	["MINIMAP_TOOLTIP_TITLE"] = "ActionBarSaver 3",
+	["MINIMAP_TOOLTIP_L1"] = "Left-click: Toggle interface (/absui)",
+	["MINIMAP_TOOLTIP_L2"] = "Right-click: Quick restore active spec profile",
+	["MINIMAP_TOOLTIP_L3"] = "Drag: Move minimap button",
+	["NEW_VERSION_ALERT"] = "A newer version of ActionBarSaver (%s) is available from %s! Check GitHub to update.",
+
+	-- Core Addon Strings
 	["Your DB has been upgraded to the new storage format."] = "Your DB has been upgraded to the new storage format.",
 	["Unable to restore equipment set \"%s\" to slot #%d, it does not appear to exist anymore."] = "Unable to restore equipment set \"%s\" to slot #%d, it does not appear to exist anymore.",
 	["Slash commands"] = "Slash commands",
@@ -31,7 +80,6 @@ select(2, ...).locals = {
 	["/abs link \"<spell 1>\" \"<spell 2>\" - Links a spell with another, INCLUDE QUOTES for example you can use \"Shadowmeld\" \"War Stomp\" so if War Stomp can't be found, it'll use Shadowmeld and vica versa."] = "/abs link \"<spell 1>\" \"<spell 2>\" - Links a spell with another, INCLUDE QUOTES for example you can use \"Shadowmeld\" \"War Stomp\" so if War Stomp can't be found, it'll use Shadowmeld and vica versa.",
 	["/abs rank - Toggles if ABS should restore the highest rank of the spell, or the one saved originally."] = "/abs rank - Toggles if ABS should restore the highest rank of the spell, or the one saved originally.",
 	
-	
 	["Unable to restore profile \"%s\", you are in combat."] = "Unable to restore profile \"%s\", you are in combat.",
 	["Unable to restore item \"%s\" to slot #%d, you on the Arena Tournament Realms and attempting to restore that item would cause a disconnect."] = "Unable to restore item \"%s\" to slot #%d, you on the Arena Tournament Realms and attempting to restore that item would cause a disconnect.",
 	["Unable to restore item \"%s\" to slot #%d, cannot be found in inventory."] = "Unable to restore item \"%s\" to slot #%d, cannot be found in inventory.",
@@ -49,7 +97,7 @@ select(2, ...).locals = {
 	["Cannot restore profile \"%s\", you can only restore profiles saved to your class."] = "Cannot restore profile \"%s\", you can only restore profiles saved to your class.",
 	["Cannot test restore profile \"%s\", you can only test restore profiles saved to your class."] = "Cannot test restore profile \"%s\", you can only test restore profiles saved to your class.",
 	["Auto restoring highest spell rank is now enabled!"] = "Auto restoring highest spell rank is now enabled!",
-	["Auto restoring highest spell rank is now disabled!"] = "Auto restoring highest spell rank is now disabeld!",
+	["Auto restoring highest spell rank is now disabled!"] = "Auto restoring highest spell rank is now disabled!",
 	
 	["Cannot rename \"%s\" to \"%s\" a profile already exists for %s."] = "Cannot rename \"%s\" to \"%s\" a profile already exists for %s.",
 	
@@ -59,7 +107,6 @@ select(2, ...).locals = {
 	["Also moved from the unknown category to %s."] = "Also moved from the unknown category to %s.",
 	
 	["%s Profiles"] = "%s Profiles",
-	
 	["Instant"] = "Instant",
 	
 	-- Classes
@@ -74,4 +121,8 @@ select(2, ...).locals = {
 	["HUNTER"] = "Hunter",
 	["ROGUE"] = "Rogue",
 	["DEATHKNIGHT"] = "Death Knight",
-}
+}, {
+	__index = function(t, k)
+		return k
+	end
+})

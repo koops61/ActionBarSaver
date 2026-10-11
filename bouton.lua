@@ -1,44 +1,107 @@
--- Créer un bouton autour de la minimap
+--[[
+    ActionBarSaver 3 - Minimap Button (WotLK 3.3.5a compatible)
+]]
+
+local ABS = select(2, ...)
+local L = ABS.locals
+
 local minimapButton = CreateFrame("Button", "ABSMinimapButton", Minimap)
-minimapButton:SetSize(32, 32) -- Taille du bouton
+minimapButton:SetWidth(32)
+minimapButton:SetHeight(32)
 minimapButton:SetFrameStrata("MEDIUM")
-minimapButton:SetPoint("TOPLEFT", Minimap, "TOPLEFT") -- Position initiale
+minimapButton:SetFrameLevel(8)
+minimapButton:EnableMouse(true)
+minimapButton:SetMovable(true)
 
--- Ajouter une texture à l'icône du bouton
+-- Icon texture (using 128x128 32-bit TGA compatible with 3.3.5)
 minimapButton.icon = minimapButton:CreateTexture(nil, "BACKGROUND")
-minimapButton.icon:SetTexture("Interface\\Icons\\abs3.png") -- Chemin vers l'icône
-minimapButton.icon:SetSize(20, 20)
-minimapButton.icon:SetPoint("CENTER")
+minimapButton.icon:SetTexture("Interface\\AddOns\\ActionBarSaver\\Icons\\abs3.tga")
+minimapButton.icon:SetWidth(20)
+minimapButton.icon:SetHeight(20)
+minimapButton.icon:SetPoint("CENTER", minimapButton, "CENTER", 0, 0)
 
--- Ajouter une texture pour l'arrière-plan (optionnel)
-minimapButton.background = minimapButton:CreateTexture(nil, "OVERLAY")
-minimapButton.background:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-minimapButton.background:SetSize(54, 54)
-minimapButton.background:SetPoint("TOPLEFT")
+-- Border texture
+minimapButton.border = minimapButton:CreateTexture(nil, "OVERLAY")
+minimapButton.border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+minimapButton.border:SetWidth(54)
+minimapButton.border:SetHeight(54)
+minimapButton.border:SetPoint("TOPLEFT", minimapButton, "TOPLEFT", 0, 0)
 
--- Gestion des clics sur le bouton
-minimapButton:SetScript("OnMouseDown", function(self, button)
+-- Highlight texture
+minimapButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+
+-- Position helper
+local function UpdatePosition()
+    local angle = math.rad((ActionBarSaverDB and ActionBarSaverDB.minimapPos) or 215)
+    local radius = 80
+    local x = math.cos(angle) * radius
+    local y = math.sin(angle) * radius
+    minimapButton:ClearAllPoints()
+    minimapButton:SetPoint("CENTER", Minimap, "CENTER", x, y)
+end
+
+-- Dragging around Minimap
+minimapButton:RegisterForDrag("LeftButton")
+minimapButton:SetScript("OnDragStart", function(self)
+    self.isDragging = true
+    self:SetScript("OnUpdate", function(self)
+        local mx, my = Minimap:GetCenter()
+        local px, py = GetCursorPosition()
+        local scale = Minimap:GetEffectiveScale()
+        px, py = px / scale, py / scale
+        local deg = math.deg(math.atan2(py - my, px - mx))
+        if deg < 0 then deg = deg + 360 end
+        if ActionBarSaverDB then
+            ActionBarSaverDB.minimapPos = deg
+        end
+        UpdatePosition()
+    end)
+end)
+
+minimapButton:SetScript("OnDragStop", function(self)
+    self.isDragging = false
+    self:SetScript("OnUpdate", nil)
+end)
+
+-- Click handling
+minimapButton:SetScript("OnClick", function(self, button)
+    if self.isDragging then return end
+
     if button == "LeftButton" then
-        -- Ouvre ou ferme l'interface utilisateur avec un clic gauche
-        if ABSUIFrame then
-            if ABSUIFrame:IsShown() then
-                ABSUIFrame:Hide()
-            else
-                ABSUIFrame:Show()
-            end
+        if SlashCmdList["ABSUI"] then
+            SlashCmdList["ABSUI"]()
         end
     elseif button == "RightButton" then
-        -- Clic droit pour vérifier les mises à jour manuellement
-        checkForUpdate()
+        -- Quick restore for current talent spec if configured, or print current profile info
+        if ABS and ABS.RestoreActiveSpecProfile then
+            ABS:RestoreActiveSpecProfile()
+        else
+            if SlashCmdList["ABSUI"] then
+                SlashCmdList["ABSUI"]()
+            end
+        end
     end
 end)
 
--- Tooltip pour le bouton minimap
+-- Tooltip
 minimapButton:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:SetText("ActionBarSaver")
-    GameTooltip:AddLine("Clic gauche pour ouvrir l'interface")
-    GameTooltip:AddLine("Clic droit pour vérifier les mises à jour")
+    GameTooltip:AddLine(L["MINIMAP_TOOLTIP_TITLE"], 1, 1, 1)
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine("|cffffffff" .. L["MINIMAP_TOOLTIP_L1"] .. "|r")
+    GameTooltip:AddLine("|cffffffff" .. L["MINIMAP_TOOLTIP_L2"] .. "|r")
+    GameTooltip:AddLine("|cffaaaaaa" .. L["MINIMAP_TOOLTIP_L3"] .. "|r")
+    
+    -- Show active spec info if available
+    local spec = GetActiveTalentGroup and GetActiveTalentGroup() or 1
+    if ActionBarSaverDB and ActionBarSaverDB.dualSpec and ActionBarSaverDB.dualSpec.enable then
+        local playerClass = select(2, UnitClass("player"))
+        local classSpecs = ActionBarSaverDB.dualSpec[playerClass]
+        local currentProfile = classSpecs and classSpecs[spec]
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine(string.format("Spé %d : |cff00ff00%s|r", spec, currentProfile or L["NONE"]), 0.9, 0.9, 0.9)
+    end
+    
     GameTooltip:Show()
 end)
 
@@ -46,50 +109,10 @@ minimapButton:SetScript("OnLeave", function(self)
     GameTooltip:Hide()
 end)
 
--- Fonction pour gérer la position du bouton autour de la minimap
-local function UpdateMinimapButtonPosition()
-    local xpos = 80 * cos(60) -- Modifiez l'angle (45) pour la position autour de la minimap
-    local ypos = 80 * sin(60)
-    minimapButton:SetPoint("TOPLEFT", Minimap, "TOPLEFT", xpos, ypos)
-end
-
--- Appel de la fonction de mise à jour pour initialiser la position
-UpdateMinimapButtonPosition()
-
--- Interface utilisateur pour afficher la version actuelle et le bouton CheckUpdate
-local function CreateUpdateFrame()
-    local frame = CreateFrame("Frame", "ABSUpdateFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(200, 100)
-    frame:SetPoint("CENTER", UIParent, "CENTER")
-
-    frame.title = frame:CreateFontString(nil, "OVERLAY")
-    frame.title:SetFontObject("GameFontHighlight")
-    frame.title:SetPoint("LEFT", frame.TitleBg, "LEFT", 5, 0)
-    frame.title:SetText("ActionBarSaver")
-
-    -- Texte pour afficher la version actuelle
-    frame.versionText = frame:CreateFontString(nil, "OVERLAY")
-    frame.versionText:SetFontObject("GameFontHighlight")
-    frame.versionText:SetPoint("TOPLEFT", 10, -30)
-    frame.versionText:SetText("Version actuelle: " .. currentVersion)
-
-    -- Bouton CheckUpdate
-    local checkButton = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
-    checkButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
-    checkButton:SetSize(100, 30)
-    checkButton:SetText("CheckUpdate")
-    checkButton:SetNormalFontObject("GameFontNormalLarge")
-    checkButton:SetHighlightFontObject("GameFontHighlightLarge")
-
-    -- Action du bouton
-    checkButton:SetScript("OnClick", function()
-        checkForUpdate()
-    end)
-
-    frame:Hide() -- Par défaut, l'interface est cachée
-
-    return frame
-end
-
--- Créer le cadre d'UI pour les mises à jour au lancement
-ABSUIFrame = CreateUpdateFrame()
+-- Initialization on load
+local loader = CreateFrame("Frame")
+loader:RegisterEvent("VARIABLES_LOADED")
+loader:SetScript("OnEvent", function(self, event)
+    UpdatePosition()
+    self:UnregisterEvent("VARIABLES_LOADED")
+end)

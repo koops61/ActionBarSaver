@@ -36,10 +36,14 @@
 
 ### **<ins>Fonctionnalités :</ins>**
 
-- ✅ Gestion complète des raccourcis clavier.
-- 📦 Sauvegarde et restauration des barres d'actions.
-- 🔄 Rafraîchissement rapide des profils.
-- ⚙️ Interface intuitive et facile à utiliser.
+- 📦 **Sauvegarde & Restauration** des barres d'actions (sorts, rangs max, macros, équipements, objets, mascottes).
+- ⌨️ **Gestion des raccourcis clavier (Keybindings)** associés à chaque profil.
+- 🔄 **Double Spécialisation automatique (Dual Spec)** : bascule automatique de vos barres lors du changement de spécialisation.
+- 📋 **Export & Import par code texte (Base64)** : transférez facilement vos profils entre différents comptes ou partagez-les avec vos amis sur Discord !
+- 🔘 **Bouton Minimap déplaçable** : clic gauche pour ouvrir l'interface (`/absui`), clic droit pour restaurer rapidement le profil actif.
+- ⚙️ **Interface graphique déplaçable** et intuitive avec filtrage par classe.
+- 🌐 **Support bilingue** : Détection automatique Français / Anglais.
+- ⚔️ **Optimisé pour WotLK 3.3.5a** (testé pour Warmane).
 
 ---
 
