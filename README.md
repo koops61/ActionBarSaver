@@ -49,7 +49,7 @@
 
 ### **<ins>Screenshots :</ins>**
 
-<p align="center"><img src="https://designer-kanis.frf/images/absui.png" alt="screenshot1"></p>
+<p align="center"><img src="https://designer-kanis.fr/images/absui.png" alt="screenshot1"></p>
 <p align="center">*Capture d'écran de la gestion des profils*</p>
 
 ---
