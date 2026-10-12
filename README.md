@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://dev.designer-kanis.com/image/abs3.webp" alt="icon-launcher" width="150">
+  <img src="https://designer-kanis.com/images/abs3.png" alt="icon-launcher" width="150">
 </p>
 
 <h1 align="center">ActionBarSaver</h1>
