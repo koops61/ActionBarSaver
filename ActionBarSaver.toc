@@ -2,7 +2,7 @@
 ## Title: Action Bar Saver 3
 ## Notes: Saves and restores your action bars
 ## Author: Shadowed & koops61
-## Version: 3.1
+## Version: 3.2
 ## SavedVariables: ActionBarSaverDB
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Slash: /actionbarsaver, /abs, /absui

@@ -33,7 +33,7 @@ function ABS:OnInitialize()
 	playerClass = select(2, UnitClass("player")) or playerClass
 	
 	local defaults = {
-		macro = false,
+		macro = true,
 		checkCount = false,
 		restoreRank = true,
 		restoreBinds = true,
@@ -131,10 +131,11 @@ function ABS:SaveProfile(name)
 end
 
 -- Save key bindings for a profile
-function ABS:SaveKeyBindings(profileName)
+function ABS:SaveKeyBindings(profileName, overrideClass)
 	self:CheckDB()
-	playerClass = playerClass or select(2, UnitClass("player"))
-	self.db.sets[playerClass][profileName] = self.db.sets[playerClass][profileName] or {}
+	local targetClass = overrideClass or playerClass or select(2, UnitClass("player"))
+	self.db.sets[targetClass] = self.db.sets[targetClass] or {}
+	self.db.sets[targetClass][profileName] = self.db.sets[targetClass][profileName] or {}
 	local bindings = {}
 	for i = 1, GetNumBindings() do
 		local action, key1, key2 = GetBinding(i)
@@ -142,19 +143,25 @@ function ABS:SaveKeyBindings(profileName)
 			bindings[action] = { key1, key2 }
 		end
 	end
-	self.db.sets[playerClass][profileName].bindings = bindings
+	self.db.sets[targetClass][profileName].bindings = bindings
+	self.db.sets[targetClass][profileName].bindingSet = GetCurrentBindingSet()
 	self:Print(string.format(L["BINDS_SAVED"], profileName))
 end
 
 -- Restore key bindings for a profile
-function ABS:RestoreKeyBindings(profileName)
+function ABS:RestoreKeyBindings(profileName, overrideClass)
 	self:CheckDB()
-	playerClass = playerClass or select(2, UnitClass("player"))
-	local set = self.db.sets[playerClass][profileName]
+	local targetClass = overrideClass or playerClass or select(2, UnitClass("player"))
+	local set = self.db.sets[targetClass] and self.db.sets[targetClass][profileName]
 	local bindings = set and set.bindings
 	if not bindings then
 		self:Print(string.format(L["NO_BINDS_FOUND"], profileName))
 		return
+	end
+
+	local targetSet = set.bindingSet or GetCurrentBindingSet()
+	if LoadBindings then
+		LoadBindings(targetSet)
 	end
 
 	-- Clear current bindings
@@ -174,7 +181,7 @@ function ABS:RestoreKeyBindings(profileName)
 		end
 	end
 
-	SaveBindings(GetCurrentBindingSet())
+	SaveBindings(targetSet)
 	self:Print(string.format(L["BINDS_RESTORED"], profileName))
 end
 
@@ -222,7 +229,7 @@ function ABS:RestoreMacros(set)
 					end
 					
 					macroName = self:UncompressText(macroName)
-					CreateMacro(macroName == "" and " " or macroName, iconCache[macroIcon] or 1, self:UncompressText(macroData), nil, perCharacter)
+					CreateMacro(macroName == "" and " " or macroName, iconCache[macroIcon] or 1, self:UncompressText(macroData), perCharacter)
 				end
 			end
 		end
@@ -410,7 +417,7 @@ function ABS:RestoreActiveSpecProfile()
 		if profile and profile ~= "" and profile ~= L["NONE"] and self.db.sets[playerClass][profile] then
 			self:RestoreProfile(profile, playerClass)
 			if self.db.restoreBinds then
-				self:RestoreKeyBindings(profile)
+				self:RestoreKeyBindings(profile, playerClass)
 			end
 			return true
 		end
@@ -484,7 +491,7 @@ SlashCmdList["ABS"] = function(msg)
 		
 		self:RestoreProfile(arg, playerClass)
 		if self.db.restoreBinds then
-			self:RestoreKeyBindings(arg)
+			self:RestoreKeyBindings(arg, playerClass)
 		end
 		
 	-- Profile renaming
@@ -1264,7 +1271,7 @@ local function CreateABSUIFrame()
 		if selectedProfileItem then
 			ABS:RestoreProfile(selectedProfileItem.name, selectedProfileItem.class)
 			if bindsCB:GetChecked() then
-				ABS:RestoreKeyBindings(selectedProfileItem.name)
+				ABS:RestoreKeyBindings(selectedProfileItem.name, selectedProfileItem.class)
 			end
 		else
 			ABS:Print(L["SELECT_PROFILE_FIRST"])
