@@ -69,6 +69,9 @@ function ABS:OnInitialize()
 end
 
 function ABS:CheckDB()
+	if not playerClass then
+		playerClass = select(2, UnitClass("player"))
+	end
 	if not self.db then
 		self:OnInitialize()
 	end
@@ -653,17 +656,15 @@ for i = 1, #b64chars do
 end
 
 local function Base64Encode(data)
-	local bytes = { data:byte(1, #data) }
-	local len = #bytes
+	if not data or data == "" then return "" end
+	local len = #data
 	local out = {}
 	local pad = (3 - (len % 3)) % 3
 	
-	for i = 1, pad do
-		bytes[len + i] = 0
-	end
-	
-	for i = 1, len + pad, 3 do
-		local b1, b2, b3 = bytes[i], bytes[i+1], bytes[i+2]
+	for i = 1, len, 3 do
+		local b1 = data:byte(i)
+		local b2 = (i + 1 <= len) and data:byte(i + 1) or 0
+		local b3 = (i + 2 <= len) and data:byte(i + 2) or 0
 		local n = b1 * 65536 + b2 * 256 + b3
 		local c1 = math.floor(n / 262144) % 64 + 1
 		local c2 = math.floor(n / 4096) % 64 + 1
@@ -708,7 +709,8 @@ local function Base64Decode(data)
 end
 
 function ABS:ExportProfile(profileName, classToken)
-	classToken = classToken or playerClass
+	self:CheckDB()
+	classToken = classToken or playerClass or select(2, UnitClass("player"))
 	local set = self.db.sets[classToken] and self.db.sets[classToken][profileName]
 	if not set then return nil end
 
@@ -728,7 +730,12 @@ function ABS:ExportProfile(profileName, classToken)
 	end
 
 	local raw = table.concat(lines, "\n")
-	return "!ABS:1!" .. Base64Encode(raw)
+	local b64 = Base64Encode(raw)
+	local chunked = {}
+	for i = 1, #b64, 64 do
+		table.insert(chunked, b64:sub(i, i + 63))
+	end
+	return "!ABS:1!\n" .. table.concat(chunked, "\n")
 end
 
 function ABS:ImportProfile(encoded)
@@ -746,13 +753,14 @@ function ABS:ImportProfile(encoded)
 		return false, L["IMPORT_ERR_INVALID"]
 	end
 
-	local lines = { string.split("\n", raw) }
+	local lines = { strsplit("\n", raw) }
 	local classToken = lines[1]
 	local profileName = lines[2]
 	if not classToken or not profileName or classToken == "" or profileName == "" then
 		return false, L["IMPORT_ERR_INVALID"]
 	end
 
+	self:CheckDB()
 	self.db.sets[classToken] = self.db.sets[classToken] or {}
 	self.db.sets[classToken][profileName] = self.db.sets[classToken][profileName] or {}
 	local set = self.db.sets[classToken][profileName]
@@ -765,13 +773,13 @@ function ABS:ImportProfile(encoded)
 			inBindings = true
 			set.bindings = {}
 		elseif inBindings then
-			local action, keys = string.split("=", line, 2)
+			local action, keys = strsplit("=", line, 2)
 			if action and keys then
-				local k1, k2 = string.split(",", keys, 2)
+				local k1, k2 = strsplit(",", keys, 2)
 				set.bindings[action] = { k1 ~= "" and k1 or nil, k2 ~= "" and k2 or nil }
 			end
 		else
-			local slot, data = string.split("=", line, 2)
+			local slot, data = strsplit("=", line, 2)
 			local slotNum = tonumber(slot)
 			if slotNum and data then
 				set[slotNum] = data
@@ -784,10 +792,12 @@ end
 
 local function CreateExportImportDialog()
 	local dialog = CreateFrame("Frame", "ABSExportImportDialog", UIParent)
-	dialog:SetWidth(450)
-	dialog:SetHeight(320)
+	dialog:SetWidth(480)
+	dialog:SetHeight(340)
 	dialog:SetPoint("CENTER", UIParent, "CENTER", 0, 30)
 	dialog:SetFrameStrata("FULLSCREEN_DIALOG")
+	dialog:SetToplevel(true)
+	dialog:SetClampedToScreen(true)
 	dialog:EnableMouse(true)
 	dialog:SetMovable(true)
 	dialog:RegisterForDrag("LeftButton")
@@ -807,53 +817,76 @@ local function CreateExportImportDialog()
 	dialog.title = title
 
 	local desc = dialog:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	desc:SetPoint("TOPLEFT", dialog, "TOPLEFT", 20, -38)
-	desc:SetPoint("TOPRIGHT", dialog, "TOPRIGHT", -20, -38)
+	desc:SetPoint("TOPLEFT", dialog, "TOPLEFT", 25, -38)
+	desc:SetPoint("TOPRIGHT", dialog, "TOPRIGHT", -25, -38)
 	desc:SetJustifyH("LEFT")
 	desc:SetText(L["EXPORT_DESC"])
 	dialog.desc = desc
 
-	-- ScrollFrame with EditBox
-	local scroll = CreateFrame("ScrollFrame", "ABSExportImportScroll", dialog, "UIPanelScrollFrameTemplate")
-	scroll:SetWidth(380)
-	scroll:SetHeight(180)
-	scroll:SetPoint("TOPLEFT", dialog, "TOPLEFT", 20, -65)
-
+	-- Background frame (created BEFORE scroll to guarantee it renders behind editbox text)
 	local ebBg = CreateFrame("Frame", nil, dialog)
-	ebBg:SetPoint("TOPLEFT", scroll, "TOPLEFT", -5, 5)
-	ebBg:SetPoint("BOTTOMRIGHT", scroll, "BOTTOMRIGHT", 25, -5)
+	ebBg:SetPoint("TOPLEFT", dialog, "TOPLEFT", 20, -65)
+	ebBg:SetPoint("BOTTOMRIGHT", dialog, "BOTTOMRIGHT", -20, 52)
 	ebBg:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 		tile = true, tileSize = 16, edgeSize = 16,
 		insets = { left = 4, right = 4, top = 4, bottom = 4 }
 	})
-	ebBg:SetBackdropColor(0, 0, 0, 0.8)
+	ebBg:SetBackdropColor(0, 0, 0, 0.85)
+	ebBg:EnableMouse(false)
+	ebBg:SetFrameLevel(dialog:GetFrameLevel() + 1)
+
+	-- ScrollFrame with EditBox
+	local scroll = CreateFrame("ScrollFrame", "ABSExportImportScroll", dialog, "UIPanelScrollFrameTemplate")
+	scroll:SetPoint("TOPLEFT", ebBg, "TOPLEFT", 6, -6)
+	scroll:SetPoint("BOTTOMRIGHT", ebBg, "BOTTOMRIGHT", -26, 6)
+	scroll:SetFrameLevel(dialog:GetFrameLevel() + 2)
 
 	local editBox = CreateFrame("EditBox", "ABSExportImportEditBox", scroll)
-	editBox:SetWidth(370)
-	editBox:SetHeight(180)
+	editBox:SetWidth(400)
 	editBox:SetMultiLine(true)
 	editBox:SetAutoFocus(false)
 	editBox:SetFontObject("GameFontHighlightSmall")
-	editBox:SetMaxLetters(99999)
+	editBox:SetMaxLetters(0)
+	editBox:SetTextInsets(4, 4, 4, 4)
 	editBox:SetScript("OnEscapePressed", function() dialog:Hide() end)
+	editBox:SetScript("OnEditFocusGained", function(self)
+		self:HighlightText(0)
+	end)
+	editBox:SetScript("OnCursorChanged", ScrollingEdit_OnCursorChanged)
+	editBox:SetScript("OnUpdate", function(self, elapsed)
+		ScrollingEdit_OnUpdate(self, elapsed, scroll)
+	end)
 	scroll:SetScrollChild(editBox)
 	dialog.editBox = editBox
+	dialog.scroll = scroll
 
 	-- Action Button (Importer)
 	local actionBtn = CreateFrame("Button", nil, dialog, "GameMenuButtonTemplate")
 	actionBtn:SetWidth(150)
-	actionBtn:SetHeight(26)
-	actionBtn:SetPoint("BOTTOMLEFT", dialog, "BOTTOMLEFT", 40, 16)
+	actionBtn:SetHeight(24)
+	actionBtn:SetPoint("BOTTOMLEFT", dialog, "BOTTOMLEFT", 25, 16)
 	actionBtn:SetText(L["IMPORT_CONFIRM"])
 	dialog.actionBtn = actionBtn
+
+	-- Select All Button (Exporter)
+	local selectAllBtn = CreateFrame("Button", nil, dialog, "GameMenuButtonTemplate")
+	selectAllBtn:SetWidth(150)
+	selectAllBtn:SetHeight(24)
+	selectAllBtn:SetPoint("BOTTOMLEFT", dialog, "BOTTOMLEFT", 25, 16)
+	selectAllBtn:SetText(L["SELECT_ALL"] or "Tout sélectionner")
+	selectAllBtn:SetScript("OnClick", function()
+		editBox:SetFocus()
+		editBox:HighlightText(0)
+	end)
+	dialog.selectAllBtn = selectAllBtn
 
 	-- Close Button
 	local closeBtn = CreateFrame("Button", nil, dialog, "GameMenuButtonTemplate")
 	closeBtn:SetWidth(110)
-	closeBtn:SetHeight(26)
-	closeBtn:SetPoint("BOTTOMRIGHT", dialog, "BOTTOMRIGHT", -40, 16)
+	closeBtn:SetHeight(24)
+	closeBtn:SetPoint("BOTTOMRIGHT", dialog, "BOTTOMRIGHT", -25, 16)
 	closeBtn:SetText(L["CLOSE"])
 	closeBtn:SetScript("OnClick", function() dialog:Hide() end)
 
@@ -862,14 +895,15 @@ local function CreateExportImportDialog()
 end
 
 function ABS:OpenExportDialog(profileName, classToken)
+	self:CheckDB()
+	classToken = classToken or playerClass or select(2, UnitClass("player"))
 	if not profileName or profileName == "" then
 		self:Print(L["SELECT_PROFILE_FIRST"])
 		return
 	end
-	classToken = classToken or playerClass
 	local encoded = self:ExportProfile(profileName, classToken)
 	if not encoded then
-		self:Print(L["SELECT_PROFILE_FIRST"])
+		self:Print(string.format(L["No profile with the name \"%s\" exists."], profileName))
 		return
 	end
 
@@ -881,10 +915,12 @@ function ABS:OpenExportDialog(profileName, classToken)
 	d.title:SetText(L["EXPORT_TITLE"] .. " : " .. profileName)
 	d.desc:SetText(L["EXPORT_DESC"])
 	d.actionBtn:Hide()
+	if d.selectAllBtn then d.selectAllBtn:Show() end
 	d.editBox:SetText(encoded)
+	if d.scroll then d.scroll:SetVerticalScroll(0) end
 	d:Show()
 	d.editBox:SetFocus()
-	d.editBox:HighlightText()
+	d.editBox:HighlightText(0)
 end
 
 function ABS:OpenImportDialog(onSuccessCallback)
@@ -896,6 +932,7 @@ function ABS:OpenImportDialog(onSuccessCallback)
 	d.title:SetText(L["IMPORT_TITLE"])
 	d.desc:SetText(L["IMPORT_DESC"])
 	d.editBox:SetText("")
+	if d.selectAllBtn then d.selectAllBtn:Hide() end
 	d.actionBtn:Show()
 	d.actionBtn:SetScript("OnClick", function()
 		local text = d.editBox:GetText()
@@ -910,6 +947,7 @@ function ABS:OpenImportDialog(onSuccessCallback)
 			ABS:Print(pName or L["IMPORT_ERR_INVALID"])
 		end
 	end)
+	if d.scroll then d.scroll:SetVerticalScroll(0) end
 	d:Show()
 	d.editBox:SetFocus()
 end
@@ -993,6 +1031,7 @@ local function CreateABSUIFrame()
 		local showAll = ABS.db and ABS.db.showAllClasses
 		local sets = (ABS.db and ABS.db.sets) or (ActionBarSaverDB and ActionBarSaverDB.sets) or {}
 
+		local pClass = playerClass or select(2, UnitClass("player"))
 		if showAll then
 			for className, classData in pairs(sets) do
 				if type(classData) == "table" then
@@ -1001,11 +1040,11 @@ local function CreateABSUIFrame()
 					end
 				end
 			end
-		else
-			local classData = sets[playerClass]
+		elseif pClass then
+			local classData = sets[pClass]
 			if classData and type(classData) == "table" then
 				for pName in pairs(classData) do
-					table.insert(list, { name = pName, class = playerClass, label = pName })
+					table.insert(list, { name = pName, class = pClass, label = pName })
 				end
 			end
 		end
@@ -1350,6 +1389,9 @@ local function CreateABSUIFrame()
 
 	-- Bouton Exporter
 	exportBtn:SetScript("OnClick", function()
+		if not selectedProfileItem then
+			RefreshProfileDropdown()
+		end
 		if selectedProfileItem then
 			ABS:OpenExportDialog(selectedProfileItem.name, selectedProfileItem.class)
 		else

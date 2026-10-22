@@ -6,7 +6,7 @@
 local ABS = select(2, ...)
 local L = ABS.locals
 
-local CURRENT_VERSION = "3.2"
+local CURRENT_VERSION = "3.3"
 local PREFIX = "ABS_VER"
 local hasNotified = false
 

@@ -16,6 +16,7 @@ ABS.locals = setmetatable({
 	["EXPORT_DESC"] = "Press Ctrl+C to copy the profile data string:",
 	["IMPORT_DESC"] = "Paste profile string here (Ctrl+V) and click Import:",
 	["IMPORT_CONFIRM"] = "Import Profile",
+	["SELECT_ALL"] = "Select All",
 	["CLOSE"] = "Close",
 	["IMPORT_SUCCESS"] = "Profile \"%s\" (%s) imported successfully!",
 	["IMPORT_ERR_INVALID"] = "Invalid or corrupted import string.",
