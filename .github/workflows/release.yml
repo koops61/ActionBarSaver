@@ -1,0 +1,41 @@
+name: Package & Release Addon
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Package Addon
+        run: |
+          # Création du dossier propre avec le nom exact requis par WoW
+          mkdir -p staging/ActionBarSaver
+          
+          # Copie des fichiers de l'addon (en excluant les fichiers git et CI)
+          rsync -av \
+            --exclude='.git*' \
+            --exclude='.github' \
+            --exclude='staging' \
+            --exclude='*.zip' \
+            ./ staging/ActionBarSaver/
+            
+          # Compression avec le dossier ActionBarSaver à la racine
+          cd staging
+          zip -r ../ActionBarSaver.zip ActionBarSaver
+          cd ..
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ActionBarSaver.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

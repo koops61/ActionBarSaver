@@ -1,0 +1,13 @@
+# Archives
+*.zip
+*.tar.gz
+
+# Dossiers temporaires
+staging/
+dist/
+build/
+
+# Système
+Thumbs.db
+.DS_Store
+*.bak
